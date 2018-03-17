@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Supports\Facades\Storage;
 use App\Post;
 
 class PostsController extends Controller
@@ -64,6 +65,8 @@ class PostsController extends Controller
             $fileNameToStore= $filename.'_'.time().'.'.$extension;
             // Upload Image
             $path = $request->file('cover_image')->storeAs('public/cover_images', $fileNameToStore);
+        } else {
+            $fileNameToStore = 'noimage.jpg';
         }
 
         // Create Post
@@ -71,9 +74,7 @@ class PostsController extends Controller
         $post->title = $request->input('title');
         $post->body = $request->input('body');
         $post->user_id = auth()->user()->id;
-        if($request->hasFile('cover_image')){
-            $post->cover_image = $fileNameToStore;
-        }
+        $post->cover_image = $fileNameToStore;
         $post->save();
         return redirect('/posts')->with('success', 'Post Updated');
 
@@ -167,6 +168,11 @@ class PostsController extends Controller
         // Check for correct user
         if (auth()->user()->id !== $post->user_id) {
             return redirect('/posts')->with('error', 'Unauthorized page');
+        }
+
+        if($post->cover_image != 'noimage.jpg'){
+            // Delete Image
+            Storage::delete('public/cover_images/'.$post->cover_image);
         }
 
         $post->delete();
