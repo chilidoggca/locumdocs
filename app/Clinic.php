@@ -6,8 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Clinic extends Model
 {
-    public function endorsements()
+    public function endorsementsRecevied()
     {
-        return $this->morphOne('App\Endorsement', 'endorsable');
+        return $this->morphMany('App\Endorsement', 'passive_endorsable');
+    }
+
+    public function endorsementsGiven()
+    {
+        return $this->morphMany('App\Endorsement', 'active_endorsable');
     }
 }
