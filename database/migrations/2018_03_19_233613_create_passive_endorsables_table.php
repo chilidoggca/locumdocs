@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEndorsingsTable extends Migration
+class CreatePassiveEndorsablesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class CreateEndorsingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('endorsings', function (Blueprint $table) {
+        Schema::create('passive_endorsables', function (Blueprint $table) {
             $table->increments('id');
+            $table->morphs('passive_endorsable');
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ class CreateEndorsingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('endorsings');
+        Schema::dropIfExists('passive_endorsables');
     }
 }
